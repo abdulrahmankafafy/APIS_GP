@@ -11,6 +11,5 @@ class PersonAdmin(admin.ModelAdmin):
     exclude = ['confirm_password']
 
 admin.site.register(Person, PersonAdmin)
-admin.site.site_header = 'Graduation Project'
-admin.site.site_title = 'Graduation Project 👨‍💻'
-
+admin.site.site_header = 'Graduation Project 👨‍💻'
+admin.site.site_title = 'Graduation Project'
