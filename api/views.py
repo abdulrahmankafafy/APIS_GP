@@ -20,7 +20,7 @@ class PersonViewSet(viewsets.ModelViewSet):
         validated_data['email_verification_token'] = verification_token
         
         try:
-            serializer.save()
+            print(serializer.save())
             self.send_verification_email(serializer.instance)
         except ValidationError as ve:
             error_message = f"Error saving {validated_data.get('username')}: {ve}"
