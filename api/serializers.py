@@ -29,6 +29,7 @@ class PersonSerializer(serializers.ModelSerializer):
 
         return attrs
   def create(self, validated_data):
+        confirm_password = validated_data.pop('confirm_password')
         # Hash the password before saving
         validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
