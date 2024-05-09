@@ -19,15 +19,9 @@ class PersonViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
         validated_data['email_verification_token'] = verification_token
         
-        try:
-            print(serializer.save())
-            self.send_verification_email(serializer.instance)
-        except ValidationError as ve:
-            error_message = f"Error saving {validated_data.get('username')}: {ve}"
-            return Response({"error": error_message}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            error_message = f"Error saving {validated_data.get('username')}: {e}"
-            return Response({"error": error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        if serializer.is_valid():
+          serializer.save()
+          self.send_verification_email(serializer.instance)
 
     def send_verification_email(self, instance):
      subject = 'Verify your email address'
