@@ -5,7 +5,7 @@ import re
 from .models import Person
 
 class PersonSerializer(serializers.ModelSerializer):
-  password = serializers.CharField(max_length=50, write_only=True, style={'input_type': 'password'})
+  password = serializers.CharField(max_length=200, write_only=True, style={'input_type': 'password'})
   confirm_password = serializers.CharField(max_length=50, write_only=True, style={'input_type': 'password'})
 
   class Meta:
