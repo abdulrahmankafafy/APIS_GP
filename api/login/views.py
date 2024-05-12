@@ -1,44 +1,10 @@
-
-# from django.contrib.auth.hashers import check_password
-# from rest_framework import viewsets
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework import permissions
-# from .serializers import LoginSerializer
-# from django.contrib.auth import authenticate
-# from .models import LoginPerson
-# from api.register.models import Person
-
-# class LoginView(viewsets.ModelViewSet):
-#     queryset = LoginPerson.objects.all()
-#     print(Person.objects.all())
-#     serializer_class = LoginSerializer
-#     permission_classes = [permissions.AllowAny]
-#     def post(self, request):
-#         serializer = LoginSerializer(data=request.data)
-#         if serializer.is_valid():
-#             # Get username and password from serializer data
-#             username = serializer.validated_data.get('username')
-#             password = serializer.validated_data.get('password')
-
-#             # Authenticate user
-#             user = authenticate(username=username, password=password)
-#             if user is not None:
-#                 # Login successful
-#                 return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
-#             else:
-#                 return Response({'error': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
-
-#         # If serializer is not valid, return the validation errors
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-from rest_framework import generics, permissions, status, views
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions, status, views
 from rest_framework.response import Response
-from .serializers import LoginSerializer
-from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 from api.register.models import Person
+from django.contrib.auth import update_session_auth_hash
+from .serializers import LoginSerializer
 
 class LoginView(views.APIView):
     permission_classes = (permissions.AllowAny, )
@@ -60,4 +26,26 @@ class LoginView(views.APIView):
 
             return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# class PasswordResetConfirmView(views.APIView):
+#     permission_classes = (permissions.AllowAny, )
+#     serializer_class = ChangePasswordSerializer
+
+#     def post(self, request, *args, **kwargs):
+#         serializer = ChangePasswordSerializer(data=request.data)
+#         print(request.user)
+#         if serializer.is_valid():
+#             # Check if the user is authenticated
+#             if request.user.is_authenticated:
+#                 user = request.user
+#                 if user.check_password(serializer.data.get('old_password')):
+#                     user.set_password(serializer.data.get('new_password'))
+#                     user.save()
+#                     update_session_auth_hash(request, user)  # To update session after password change
+#                     return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
+#                 return Response({'error': 'Incorrect old password.'}, status=status.HTTP_400_BAD_REQUEST)
+#             else:
+#                 return Response({'error': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
