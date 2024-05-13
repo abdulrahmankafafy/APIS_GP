@@ -8,5 +8,5 @@ app_name = 'register'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('verify-email/', PersonViewSet.as_view({'get': 'verify_email'}), name='verify_email'),
+    path('verify_email/', PersonViewSet.as_view({'get': 'verify_email'}), name='verify_email'),
 ]

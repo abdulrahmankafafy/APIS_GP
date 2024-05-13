@@ -23,8 +23,8 @@ class PersonViewSet(viewsets.ModelViewSet):
    
     def send_verification_email(self, instance):
         subject = 'Verify your email address'
-        message = f'<p>Click <a href="{settings.BASE_URL}/verify-email/?token={instance.email_verification_token}">here</a> to verify your email address.</p>'
-        from_email = settings.DEFAULT_FROM_EMAIL
+        message = f'<p>Click <a href="{settings.BASE_URL}/verify_email/?token={instance.email_verification_token}">here</a> to verify your email address.</p>'
+        from_email = 'AboErdan@gmail.com'
         to_email = instance.email
         email = EmailMessage(subject, message, from_email, [to_email])
         email.content_subtype = 'html'
@@ -32,7 +32,6 @@ class PersonViewSet(viewsets.ModelViewSet):
 
     def verify_email(self, request):
         token = request.query_params.get('token')
-
         try:
             person = Person.objects.get(email_verification_token=token)
             person.email_verified = True
