@@ -7,8 +7,6 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 from .models import Person
 from .serializers import PersonSerializer
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, login
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
@@ -22,30 +20,6 @@ class PersonViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         self.send_verification_email(instance)
         return Response({'message': 'User registered successfully'}, status=status.HTTP_200_OK)
-        # if serializer.is_valid():
-        #     instance = serializer.save()
-        #     person_instance = Person.objects.get(username=instance.username)
-        #     print("Username:", person_instance.username)
-        #     print("Password:", person_instance.password)
-
-        #     # Authenticate the user after registration
-        #     # Authenticate the user after registration
-        #     user = authenticate(username=instance.username, password=Person.password)
-
-        #     print(user)
-        #     if user is not None:
-                
-        #         login(self.request, user)
-
-        #         # Optionally, issue a token to the user
-        #         token, created = Token.objects.get_or_create(user=user)
-
-        #         # Send verification email
-        #         self.send_verification_email(instance)
-
-        #     return Response({'message': 'User registered successfully'}, status=status.HTTP_200_OK)
-        # else:
-        #     return Response({'error': 'User registration failed'}, status=status.HTTP_400_BAD_REQUEST)
    
     def send_verification_email(self, instance):
         subject = 'Verify your email address'
