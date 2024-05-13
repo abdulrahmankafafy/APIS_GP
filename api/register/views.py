@@ -7,21 +7,20 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 from .models import Person
 from .serializers import PersonSerializer
-
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     permission_classes = [permissions.AllowAny]
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)  # Trigger validation
         verification_token = get_random_string(length=32)
-        validated_data = serializer.validated_data
-        validated_data['email_verification_token'] = verification_token
-
-        if serializer.is_valid():
-            serializer.save()
-            self.send_verification_email(serializer.instance)
-
+        serializer.validated_data['email_verification_token'] = verification_token
+        instance = serializer.save()
+        self.send_verification_email(instance)
+        return Response({'message': 'User registered successfully'}, status=status.HTTP_200_OK)
+   
     def send_verification_email(self, instance):
         subject = 'Verify your email address'
         message = f'<p>Click <a href="{settings.BASE_URL}/verify-email/?token={instance.email_verification_token}">here</a> to verify your email address.</p>'

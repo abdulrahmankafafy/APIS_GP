@@ -1,44 +1,10 @@
-
-# from django.contrib.auth.hashers import check_password
-# from rest_framework import viewsets
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework import permissions
-# from .serializers import LoginSerializer
-# from django.contrib.auth import authenticate
-# from .models import LoginPerson
-# from api.register.models import Person
-
-# class LoginView(viewsets.ModelViewSet):
-#     queryset = LoginPerson.objects.all()
-#     print(Person.objects.all())
-#     serializer_class = LoginSerializer
-#     permission_classes = [permissions.AllowAny]
-#     def post(self, request):
-#         serializer = LoginSerializer(data=request.data)
-#         if serializer.is_valid():
-#             # Get username and password from serializer data
-#             username = serializer.validated_data.get('username')
-#             password = serializer.validated_data.get('password')
-
-#             # Authenticate user
-#             user = authenticate(username=username, password=password)
-#             if user is not None:
-#                 # Login successful
-#                 return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
-#             else:
-#                 return Response({'error': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
-
-#         # If serializer is not valid, return the validation errors
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-from rest_framework import generics, permissions, status, views
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions, status, views
 from rest_framework.response import Response
-from .serializers import LoginSerializer
-from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from api.register.models import Person
+from django.core.exceptions import ObjectDoesNotExist
+from .serializers import LoginSerializer, ChangePasswordSerializer
 
 class LoginView(views.APIView):
     permission_classes = (permissions.AllowAny, )
@@ -59,5 +25,34 @@ class LoginView(views.APIView):
                 return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
 
             return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordConfirmView(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ChangePasswordSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            username = serializer.validated_data.get('username')
+            try:
+                user = Person.objects.get(username=username)
+            except Person.DoesNotExist:
+                return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            old_password = serializer.validated_data.get('old_password')
+            if not check_password(old_password, user.password):
+                return Response({'error': 'Incorrect old password.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            new_password = serializer.validated_data.get('new_password')
+            print(new_password)
+            print(old_password)
+            if  old_password == new_password:
+                return Response({'error': 'The new password matches the old password, please enter a different password.'}, status=status.HTTP_400_BAD_REQUEST)
+            user.password = make_password(new_password)
+            user.save()
+            return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

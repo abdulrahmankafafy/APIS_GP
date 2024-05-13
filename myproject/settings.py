@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-4_-$d(o2el4rs947b-e6m8n^pj*esd33o3h%!mp==we#rv#gjq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -95,16 +95,16 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'GraduationProject',
-#         'USER': 'postgres',
-#         'PASSWORD': 'kafafy123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'GraduationProject',
+        'USER': 'postgres',
+        'PASSWORD': 'ibrahim12345',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 
 # Password validation
