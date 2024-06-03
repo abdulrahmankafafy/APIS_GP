@@ -62,37 +62,38 @@ class ProfileView(views.APIView):
         except Person.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
-        if not user.is_logged_in:
-            return Response({'error': 'User is not logged in.'}, status=status.HTTP_400_BAD_REQUEST) 
 
+        if not user.is_logged_in:
+            return Response({'error': 'User is not logged in'}, status=status.HTTP_403_FORBIDDEN)
+        
         serializer = ProfileSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     def put(self, request, username):
         try:
             user = Person.objects.get(username=username)
         except Person.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        
-        if not user.is_logged_in:
-            return Response({'error': 'User is not logged in.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if request.user.username != username:
+        if user.username != username:
             return Response({'error': 'You cannot edit your username.'}, status=status.HTTP_403_FORBIDDEN)
 
         serializer = ProfileSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             
+            if not user.is_logged_in:
+                return Response({'error': 'User is not logged in'}, status=status.HTTP_403_FORBIDDEN)
+            
             new_email = serializer.validated_data.get('email')
             if new_email and Person.objects.exclude(username=username).filter(email=new_email).exists():
                 return Response({'error': 'This email is already in use by another user.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            
+            # Validate phone uniqueness
             new_phone = serializer.validated_data.get('phone')
             if new_phone and Person.objects.exclude(username=username).filter(phone=new_phone).exists():
                 return Response({'error': 'This phone number is already in use by another user.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            
+            # Update user attributes
             user.first_name = serializer.validated_data.get('first_name', user.first_name)
             user.last_name = serializer.validated_data.get('last_name', user.last_name)
             user.email = serializer.validated_data.get('email', user.email)

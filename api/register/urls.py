@@ -10,5 +10,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('verify_email/', PersonViewSet.as_view({'get': 'verify_email'}), name='verify_email'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('profile/<username>', ProfileView.as_view(), name='profile'),
+    path('profile/<str:username>/', ProfileView.as_view(), name='profile'),
 ]

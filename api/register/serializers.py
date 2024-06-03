@@ -40,4 +40,4 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
       model = Person
       fields = ('username', 'first_name', 'last_name', 'email', 'phone')
-      read_only_fields = ('username')
+      read_only_fields = ('username',)
