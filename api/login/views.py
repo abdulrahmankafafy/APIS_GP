@@ -25,7 +25,9 @@ class LoginView(views.APIView):
 
             if not check_password(password, user.password):
                 return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
-
+            
+            user.is_logged_in = True
+            user.save()
             return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -43,6 +45,9 @@ class ChangePasswordConfirmView(views.APIView):
             except Person.DoesNotExist:
                 return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
+            if not user.is_logged_in:
+                return Response({'error': 'User is not logged in.'}, status=status.HTTP_400_BAD_REQUEST)
+            
             old_password = serializer.validated_data.get('old_password')
             if not check_password(old_password, user.password):
                 return Response({'error': 'Incorrect old password.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -83,9 +88,8 @@ class ForgetPasswordView(views.APIView):
     def send_verification_email_reset_password(self, email, token):
         subject = 'Reset your password'
         message = f'<p>Click <a href="{settings.BASE_URL}/login/reset_password/?token={token}">here</a> to reset your password.</p>'
-        from_email = 'AboErdan@gmail.com'
         to_email = email
-        email = EmailMessage(subject, message, from_email, [to_email])
+        email = EmailMessage(subject, message, [to_email])
         email.content_subtype = 'html'
         email.send(fail_silently=False)
 
