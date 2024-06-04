@@ -44,8 +44,15 @@ class PersonViewSet(viewsets.ModelViewSet):
 class LogoutView(views.APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request):
-        user = request.user
+    def get(self, request, username):
+        try:
+            user = Person.objects.get(username=username)
+        except Person.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not user.is_logged_in:
+            return Response({'error': 'User is not logged in'}, status=status.HTTP_403_FORBIDDEN)
+
         user.is_logged_in = False
         user.save()
         return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)

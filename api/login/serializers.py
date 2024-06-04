@@ -16,7 +16,6 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=100)
     old_password = serializers.CharField(max_length=200, write_only=True, style={'input_type': 'password'})
     new_password = serializers.CharField(max_length=200, write_only=True, style={'input_type': 'password'})
     confirm_password = serializers.CharField(max_length=200, write_only=True, style={'input_type': 'password'})
