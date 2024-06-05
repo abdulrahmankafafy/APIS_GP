@@ -22,13 +22,24 @@ class LoginView(views.APIView):
                 user = Person.objects.get(username=username)
             except Person.DoesNotExist:
                 return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if user.is_logged_in:
+                return Response({'error': 'User is already logged in'}, status=status.HTTP_400_BAD_REQUEST)
 
             if not check_password(password, user.password):
                 return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
             
             user.is_logged_in = True
             user.save()
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+            response_data = {
+                'message': 'Login successful',
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'phone': user.phone,
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordConfirmView(views.APIView):
