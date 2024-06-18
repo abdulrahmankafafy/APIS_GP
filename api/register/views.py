@@ -16,7 +16,7 @@ class PersonViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)  # Trigger validation
         verification_token = get_random_string(length=32)
         serializer.validated_data['email_verification_token'] = verification_token
-        serializer.validated_data['is_logged_in'] = True
+        # serializer.validated_data['is_logged_in'] = True
         instance = serializer.save()
         self.send_verification_email(instance)
         return Response({'message': 'User registered successfully'}, status=status.HTTP_200_OK)
