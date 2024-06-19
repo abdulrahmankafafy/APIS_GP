@@ -21,3 +21,8 @@ class Person(models.Model):
 
     def __str__(self):
         return self.username
+    
+    
+    @property
+    def notifications_list(self):
+        return self.notifications.all()

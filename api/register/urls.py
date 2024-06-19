@@ -9,6 +9,6 @@ app_name = 'register'
 urlpatterns = [
     path('', include(router.urls)),
     path('verify_email/', PersonViewSet.as_view({'get': 'verify_email'}), name='verify_email'),
-    path('logout/<username>', LogoutView.as_view(), name='logout'),
+    path('logout/<str:username>', LogoutView.as_view(), name='logout'),
     path('profile/<str:username>/', ProfileView.as_view(), name='profile'),
 ]
