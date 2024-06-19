@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'api.register',
     'api.login',
+    'api.notification',
     'api.posts',
 
 ]
@@ -152,7 +153,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True  
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = '551e1c3df74220'
-EMAIL_HOST_PASSWORD = 'cad3c449d2e2fc'
-EMAIL_PORT = '2525'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ibrahimyasser450@gmail.com'
+EMAIL_HOST_PASSWORD = 'dgxsmunzmyntjiqo'
+EMAIL_PORT='587'
