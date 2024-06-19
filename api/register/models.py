@@ -9,7 +9,7 @@ class Person(models.Model):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=70)
     last_name = models.CharField(max_length=70)
-    username = models.CharField(max_length=100, unique=True)
+    username = models.CharField(max_length=100, unique=True) # primary key
     password = models.CharField(max_length=200, null=True)
     confirm_password = models.CharField(max_length=100, null=True)
     account_type = models.CharField(max_length=100, default='User', choices=x)
@@ -17,6 +17,7 @@ class Person(models.Model):
     Created_account = models.DateTimeField(default=timezone.now)
     email_verified = models.BooleanField(default=False)
     email_verification_token = models.CharField(max_length=200, null=True, blank=True)
+    is_logged_in = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
