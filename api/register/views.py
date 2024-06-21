@@ -44,9 +44,10 @@ class PersonViewSet(viewsets.ModelViewSet):
 class LogoutView(views.APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, person_id):
+    def get(self, request, username):
         try:
-            user = Person.objects.get(id=person_id)
+            # user = Person.objects.get(id=person_id)
+            user = Person.objects.get(username=username)
         except Person.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -63,9 +64,10 @@ class ProfileView(views.APIView):
     serializer_class = ProfileSerializer
     permission_classes = [permissions.AllowAny]
 
-    def get(self, request, person_id):
+    def get(self, request, username):
         try:
-            user = Person.objects.get(id=person_id)
+            # user = Person.objects.get(id=person_id)
+            user = Person.objects.get(username=username)
         except Person.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -77,6 +79,7 @@ class ProfileView(views.APIView):
 
     def put(self, request, username):
         try:
+            # user = Person.objects.get(id=person_id)
             user = Person.objects.get(username=username)
         except Person.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)

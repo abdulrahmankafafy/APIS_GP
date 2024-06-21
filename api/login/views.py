@@ -47,12 +47,13 @@ class ChangePasswordConfirmView(views.APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ChangePasswordSerializer
 
-    def post(self, request, person_id, *args, **kwargs):
+    def post(self, request, username, *args, **kwargs):
         serializer = ChangePasswordSerializer(data=request.data)
 
         if serializer.is_valid():
             try:
-                user = Person.objects.get(id=person_id)
+                # user = Person.objects.get(id=person_id)
+                user = Person.objects.get(username=username)
             except Person.DoesNotExist:
                 return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
