@@ -7,7 +7,6 @@ from .models import Person
 class PersonSerializer(serializers.ModelSerializer):
   password = serializers.CharField(max_length=200, write_only=True, style={'input_type': 'password'})
   confirm_password = serializers.CharField(max_length=50, write_only=True, style={'input_type': 'password'})
-
   class Meta:
       model = Person
       fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password', 'confirm_password', 'account_type', 'phone')

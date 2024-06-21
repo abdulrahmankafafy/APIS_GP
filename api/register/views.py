@@ -13,7 +13,7 @@ class PersonViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)  # Trigger validation
+        serializer.is_valid(raise_exception=True) 
         verification_token = get_random_string(length=32)
         serializer.validated_data['email_verification_token'] = verification_token
         # serializer.validated_data['is_logged_in'] = True
@@ -44,14 +44,14 @@ class PersonViewSet(viewsets.ModelViewSet):
 class LogoutView(views.APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, username):
+    def get(self, request, person_id):
         try:
-            user = Person.objects.get(username=username)
+            user = Person.objects.get(id=person_id)
         except Person.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
         if not user.is_logged_in:
-            return Response({'error': 'User is not logged in'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': 'User is already logged out'}, status=status.HTTP_403_FORBIDDEN)
 
         user.is_logged_in = False
         user.save()
@@ -63,13 +63,12 @@ class ProfileView(views.APIView):
     serializer_class = ProfileSerializer
     permission_classes = [permissions.AllowAny]
 
-    def get(self, request, username):
+    def get(self, request, person_id):
         try:
-            user = Person.objects.get(username=username)
+            user = Person.objects.get(id=person_id)
         except Person.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
-
         if not user.is_logged_in:
             return Response({'error': 'User is not logged in'}, status=status.HTTP_403_FORBIDDEN)
         
@@ -95,12 +94,10 @@ class ProfileView(views.APIView):
             if new_email and Person.objects.exclude(username=username).filter(email=new_email).exists():
                 return Response({'error': 'This email is already in use by another user.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Validate phone uniqueness
             new_phone = serializer.validated_data.get('phone')
             if new_phone and Person.objects.exclude(username=username).filter(phone=new_phone).exists():
                 return Response({'error': 'This phone number is already in use by another user.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Update user attributes
             user.first_name = serializer.validated_data.get('first_name', user.first_name)
             user.last_name = serializer.validated_data.get('last_name', user.last_name)
             user.email = serializer.validated_data.get('email', user.email)
