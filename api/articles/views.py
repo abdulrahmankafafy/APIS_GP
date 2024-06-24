@@ -11,13 +11,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
-        user_id = self.request.data.get('user_id')
+        username = self.request.data.get('username')
         try:
-            author = Person.objects.get(id=user_id)
+            author = Person.objects.get(username=username)
         except Person.DoesNotExist:
-            raise serializer.ValidationError({"user_id": "User does not exist"})
+            raise serializer.ValidationError({"username": "User does not exist"})
         
         if author.account_type != 'Doctor':
-            raise serializer.ValidationError({"user_id": "Only doctors can create articles"})
+            raise serializer.ValidationError({"username": "Only doctors can create articles"})
         
         serializer.save(author=author)
