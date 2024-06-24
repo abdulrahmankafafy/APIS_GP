@@ -1,4 +1,3 @@
-# notification/models.py
 from django.db import models
 from api.register.models import Person
 

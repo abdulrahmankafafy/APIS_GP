@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'api.login',
     'api.notification',
     'api.posts',
+    'api.search',
 
 ]
 

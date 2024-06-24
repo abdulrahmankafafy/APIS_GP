@@ -37,6 +37,7 @@ class LoginView(views.APIView):
                 'username': user.username,
                 'first_name': user.first_name,
                 'last_name': user.last_name,
+                'account_type': user.account_type,
                 'email': user.email,
                 'phone': user.phone,
             }
