@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'api.notification',
     'api.posts',
     'api.search',
+    'api.articles'
 
 ]
 
@@ -97,16 +98,16 @@ DATABASES = {
     }
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'GraduationProject',
-        'USER': 'postgres',
-        'PASSWORD': 'ibrahim12345',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'GraduationProject',
+#         'USER': 'postgres',
+#         'PASSWORD': 'ibrahim12345',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
