@@ -7,4 +7,5 @@ urlpatterns = [
     # path('posts/', include('api.posts.urls')),
     path('notification/', include('api.notification.urls')),
     path('search/', include('api.search.urls')),
+    path('model/', include('api.model.urls')),
 ]
